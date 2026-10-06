@@ -10,14 +10,20 @@ function headline(percentage: number) {
   return "Mashq qilishda davom eting. Quyida xatolaringizni ko‘rib chiqing.";
 }
 
-export function ResultSummary({ subjectName, result }: { subjectName: string; result: TestResult }) {
+interface ResultSummaryProps {
+  subjectName: string;
+  result: TestResult;
+  title?: string;
+}
+
+export function ResultSummary({ subjectName, result, title = "Test yakunlandi 🎉" }: ResultSummaryProps) {
   return (
     <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
       <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
         <ResultCircle percentage={result.percentage} />
         <div>
           <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">{subjectName}</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight">Test yakunlandi 🎉</h1>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">{headline(result.percentage)}</p>
           <p className="mt-4 text-4xl font-bold tabular-nums">
             {result.correct}

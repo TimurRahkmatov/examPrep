@@ -7,6 +7,8 @@ interface AnswerReviewProps {
   question: Question;
   selected: string | undefined;
   status: QuestionStatus;
+  /** Practice only: where the question comes from. */
+  source?: string;
 }
 
 const borders: Record<QuestionStatus, string> = {
@@ -35,14 +37,17 @@ function AnswerLine({ tone, label, text }: { tone: "correct" | "wrong"; label: s
   );
 }
 
-export function AnswerReview({ number, question, selected, status }: AnswerReviewProps) {
+export function AnswerReview({ number, question, selected, status, source }: AnswerReviewProps) {
   return (
     <article
       id={`review-${number}`}
       className={cn("scroll-mt-24 rounded-2xl border border-l-4 border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6", borders[status])}
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{number}-savol</p>
+        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+          {number}-savol
+          {source && <span className="ml-2 font-medium">{source}</span>}
+        </p>
         {status === "correct" && <span className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">To‘g‘ri</span>}
         {status === "incorrect" && <span className="text-xs font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-400">Noto‘g‘ri</span>}
         {status === "unanswered" && <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Javobsiz</span>}

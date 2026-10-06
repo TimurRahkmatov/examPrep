@@ -1,103 +1,65 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { createLocalStore } from "./local-store";
 import { computeResult } from "./scoring";
 import { newSeed } from "./shuffle";
-import type { ProgressState, Question, SubjectProgress } from "./types";
+import type { CompletedAttempt, ProgressState, Question, SubjectProgress } from "./types";
 
-const STORAGE_KEY = "examprep:progress:v1";
+// Keyed by subject id for normal tests and by `practice:<scope>` for mistake practice.
+const store = createLocalStore<ProgressState>("examprep:progress:v1", () => ({}));
 
-let cache: { raw: string | null; value: ProgressState } = { raw: null, value: {} };
-let storageWorks = true;
-const listeners = new Set<() => void>();
+/** Saved progress for all tests, or null during server render and hydration. */
+export const useProgress = store.useValue;
 
-function parse(raw: string | null): ProgressState {
-  if (!raw) return {};
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? (parsed as ProgressState) : {};
-  } catch {
-    return {};
-  }
+function updateSubject(key: string, update: (current: SubjectProgress) => SubjectProgress) {
+  const state = store.read();
+  store.write({ ...state, [key]: update(state[key] ?? { completedCount: 0 }) });
 }
 
-function read(): ProgressState {
-  if (!storageWorks) return cache.value;
-  let raw: string | null = null;
-  try {
-    raw = window.localStorage.getItem(STORAGE_KEY);
-  } catch {
-    storageWorks = false;
-    return cache.value;
-  }
-  // Return the same object while storage is unchanged, as useSyncExternalStore requires.
-  if (raw !== cache.raw) cache = { raw, value: parse(raw) };
-  return cache.value;
-}
-
-function write(next: ProgressState) {
-  const raw = JSON.stringify(next);
-  try {
-    window.localStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // Private mode or full storage: keep working in memory for this tab.
-    storageWorks = false;
-  }
-  cache = { raw, value: next };
-  listeners.forEach((listener) => listener());
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  const onStorage = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY) listener();
-  };
-  window.addEventListener("storage", onStorage);
-  return () => {
-    listeners.delete(listener);
-    window.removeEventListener("storage", onStorage);
-  };
-}
-
-/** Saved progress for all subjects, or null during server render and hydration. */
-export function useProgress(): ProgressState | null {
-  return useSyncExternalStore(subscribe, read, () => null);
-}
-
-function updateSubject(subjectId: string, update: (current: SubjectProgress) => SubjectProgress) {
-  const state = read();
-  write({ ...state, [subjectId]: update(state[subjectId] ?? { completedCount: 0 }) });
-}
-
-export function startAttempt(subjectId: string) {
-  updateSubject(subjectId, (current) => ({
+export function startAttempt(key: string, questionKeys?: string[]) {
+  updateSubject(key, (current) => ({
     ...current,
-    active: { answers: {}, currentIndex: 0, seed: newSeed(), startedAt: Date.now() },
+    active: { answers: {}, currentIndex: 0, seed: newSeed(), startedAt: Date.now(), questionKeys },
   }));
 }
 
-export function selectAnswer(subjectId: string, questionId: number, option: string) {
-  updateSubject(subjectId, (current) =>
+export function selectAnswer(key: string, questionId: number, option: string) {
+  updateSubject(key, (current) =>
     current.active
       ? { ...current, active: { ...current.active, answers: { ...current.active.answers, [questionId]: option } } }
       : current,
   );
 }
 
-export function goToQuestion(subjectId: string, index: number) {
-  updateSubject(subjectId, (current) =>
+export function goToQuestion(key: string, index: number) {
+  updateSubject(key, (current) =>
     current.active ? { ...current, active: { ...current.active, currentIndex: index } } : current,
   );
 }
 
-export function finishAttempt(subjectId: string, questions: Question[]) {
-  updateSubject(subjectId, (current) => {
+/** Drops unfinished attempts whose key starts with `prefix`, except `keep`. Finished results stay. */
+export function discardActiveAttempts(prefix: string, keep: string) {
+  const state = store.read();
+  const stale = Object.keys(state).filter((key) => key.startsWith(prefix) && key !== keep && state[key].active);
+  if (stale.length === 0) return;
+  const next = { ...state };
+  for (const key of stale) next[key] = { ...state[key], active: undefined };
+  store.write(next);
+}
+
+/** Scores the active attempt, stores it as the last result and returns it. */
+export function finishAttempt(key: string, questions: Question[]): CompletedAttempt | undefined {
+  let finished: CompletedAttempt | undefined;
+  updateSubject(key, (current) => {
     if (!current.active) return current;
-    const result = computeResult(questions, current.active.answers);
+    const { answers, questionKeys } = current.active;
+    const result = computeResult(questions, answers);
+    finished = { ...result, answers, questionKeys, finishedAt: Date.now() };
     return {
       completedCount: current.completedCount + 1,
       bestPercentage: Math.max(current.bestPercentage ?? 0, result.percentage),
-      lastResult: { ...result, answers: current.active.answers, finishedAt: Date.now() },
+      lastResult: finished,
     };
   });
+  return finished;
 }

@@ -3,26 +3,35 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ClipboardList, LayoutGrid, RotateCcw } from "lucide-react";
-import { getSubject } from "@/questions";
-import { startAttempt, useProgress } from "@/lib/progress-store";
+import { scopeStats } from "@/lib/mistakes";
+import { useProgress } from "@/lib/progress-store";
 import { getQuestionStatus, matchesFilter } from "@/lib/scoring";
+import { getTestConfig, getTestQuestions, startTest, useMistakes, type TestConfig } from "@/lib/tests";
 import type { ReviewFilter } from "@/lib/types";
 import { AnswerReview } from "./AnswerReview";
 import { Button, LinkButton } from "./Button";
 import { FilterTabs } from "./FilterTabs";
+import { MistakesCallout } from "./MistakesCallout";
 import { QuestionNavigator } from "./QuestionNavigator";
 import { ResultSummary } from "./ResultSummary";
 
-export function ResultsView({ subjectId }: { subjectId: string }) {
-  const subject = getSubject(subjectId)!;
+export function ResultsView({ kind, scope }: { kind: TestConfig["kind"]; scope: string }) {
+  const config = useMemo(() => getTestConfig(kind, scope)!, [kind, scope]);
   const router = useRouter();
   const progress = useProgress();
-  const result = progress?.[subjectId]?.lastResult;
+  const mistakes = useMistakes();
+  const result = progress?.[config.progressKey]?.lastResult;
   const [filter, setFilter] = useState<ReviewFilter>("all");
 
+  // Practice reviews come from the keys frozen at start, not the (now smaller) live mistake list.
+  const { questions, items } = useMemo(
+    () => getTestQuestions(config, result?.questionKeys, mistakes),
+    [config, result?.questionKeys, mistakes],
+  );
+
   const statuses = useMemo(
-    () => subject.questions.map((q) => getQuestionStatus(q, result?.answers ?? {}, true)),
-    [subject, result],
+    () => questions.map((q) => getQuestionStatus(q, result?.answers ?? {}, true)),
+    [questions, result],
   );
 
   const counts = useMemo(() => {
@@ -31,9 +40,8 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
     return tally;
   }, [statuses]);
 
-  const retake = () => {
-    startAttempt(subjectId);
-    router.push(`/subject/${subjectId}`);
+  const start = (test: TestConfig) => {
+    if (startTest(test)) router.push(test.testPath);
   };
 
   const jumpTo = (index: number) => {
@@ -44,7 +52,7 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
     );
   };
 
-  if (progress === null) {
+  if (progress === null || mistakes === null) {
     return (
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <div className="h-80 animate-pulse rounded-3xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
@@ -57,9 +65,9 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
       <main className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
         <ClipboardList className="mx-auto h-12 w-12 text-slate-400" aria-hidden />
         <h1 className="mt-4 text-2xl font-bold">Hozircha natijalar yo‘q</h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">Natija va tahlilni ko‘rish uchun «{subject.name}» testini yakunlang.</p>
+        <p className="mt-2 text-slate-600 dark:text-slate-400">Natija va tahlilni ko‘rish uchun «{config.title}» testini yakunlang.</p>
         <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
-          <LinkButton href={`/subject/${subjectId}`}>Testga o‘tish</LinkButton>
+          <LinkButton href={config.testPath}>Testga o‘tish</LinkButton>
           <LinkButton href="/" variant="secondary">
             Fanlarga qaytish
           </LinkButton>
@@ -68,18 +76,38 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
     );
   }
 
-  const visible = subject.questions
+  const isPractice = kind === "practice";
+  const practiceConfig = isPractice ? config : getTestConfig("practice", scope)!;
+  const stats = scopeStats(mistakes, scope);
+  // The retake button stays primary unless the mistakes card offers the main action.
+  const practiceOffered = !isPractice && result.correct !== result.total && stats.pending > 0;
+
+  const visible = questions
     .map((question, index) => ({ question, index, status: statuses[index] }))
     .filter((item) => matchesFilter(item.status, filter));
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-      <ResultSummary subjectName={subject.name} result={result} />
+      <ResultSummary
+        subjectName={config.title}
+        result={result}
+        title={isPractice ? "Xatolar mashqi yakunlandi" : undefined}
+      />
+
+      <MistakesCallout
+        kind={kind}
+        result={result}
+        stats={stats}
+        allSubjects={scope === "all"}
+        onPractice={() => start(practiceConfig)}
+      />
 
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-        <Button onClick={retake}>
-          <RotateCcw className="h-4 w-4" aria-hidden /> Testni qayta topshirish
-        </Button>
+        {!isPractice && (
+          <Button variant={practiceOffered ? "secondary" : "primary"} onClick={() => start(config)}>
+            <RotateCcw className="h-4 w-4" aria-hidden /> Testni qayta topshirish
+          </Button>
+        )}
         <LinkButton href="/" variant="secondary">
           <LayoutGrid className="h-4 w-4" aria-hidden /> Fanlarga qaytish
         </LinkButton>
@@ -104,15 +132,19 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
               Bu toifada savollar yo‘q.
             </p>
           ) : (
-            visible.map(({ question, index, status }) => (
-              <AnswerReview
-                key={question.id}
-                number={index + 1}
-                question={question}
-                selected={result.answers[question.id]}
-                status={status}
-              />
-            ))
+            visible.map(({ question, index, status }) => {
+              const item = items?.[index];
+              return (
+                <AnswerReview
+                  key={question.id}
+                  number={index + 1}
+                  question={question}
+                  selected={result.answers[question.id]}
+                  status={status}
+                  source={item && `${item.subject.name} · ${item.question.id}-savol`}
+                />
+              );
+            })
           )}
         </div>
       </section>

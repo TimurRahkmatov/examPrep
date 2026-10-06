@@ -9,5 +9,5 @@ export function generateStaticParams() {
 export default async function ResultsPage({ params }: { params: Promise<{ subjectId: string }> }) {
   const { subjectId } = await params;
   if (!getSubject(subjectId)) notFound();
-  return <ResultsView subjectId={subjectId} />;
+  return <ResultsView kind="subject" scope={subjectId} />;
 }

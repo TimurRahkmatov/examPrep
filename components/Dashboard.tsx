@@ -2,10 +2,13 @@
 
 import { subjects } from "@/questions";
 import { useProgress } from "@/lib/progress-store";
+import { useMistakes } from "@/lib/tests";
+import { MistakesPanel } from "./MistakesPanel";
 import { SubjectCard } from "./SubjectCard";
 
 export function Dashboard() {
   const progress = useProgress();
+  const mistakes = useMistakes();
 
   const completed = subjects.filter((s) => progress?.[s.id]?.lastResult);
   const average =
@@ -41,6 +44,12 @@ export function Dashboard() {
           ))}
         </dl>
       </section>
+
+      {progress && mistakes ? (
+        <MistakesPanel mistakes={mistakes} progress={progress} />
+      ) : (
+        <div className="mt-8 h-32 animate-pulse rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
+      )}
 
       <section aria-label="Fanlar" className="mt-8 grid gap-4 sm:gap-6 md:grid-cols-2">
         {progress === null
