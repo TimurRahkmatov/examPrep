@@ -48,26 +48,26 @@ export function SubjectCard({ subject, index, progress }: SubjectCardProps) {
         </div>
         {active ? (
           <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
-            In progress
+            Jarayonda
           </span>
         ) : last ? (
           <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300">
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> Completed
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> Yakunlangan
           </span>
         ) : null}
       </div>
 
       <dl className="mt-5 grid grid-cols-3 gap-3 text-sm">
         <div>
-          <dt className="text-slate-500 dark:text-slate-400">Questions</dt>
+          <dt className="text-slate-500 dark:text-slate-400">Savollar</dt>
           <dd className="mt-0.5 font-semibold">{total}</dd>
         </div>
         <div>
-          <dt className="text-slate-500 dark:text-slate-400">Last score</dt>
+          <dt className="text-slate-500 dark:text-slate-400">Oxirgi natija</dt>
           <dd className="mt-0.5 font-semibold">{last ? `${last.correct}/${last.total}` : "—"}</dd>
         </div>
         <div>
-          <dt className="text-slate-500 dark:text-slate-400">Best</dt>
+          <dt className="text-slate-500 dark:text-slate-400">Eng yaxshi</dt>
           <dd className="mt-0.5 inline-flex items-center gap-1 font-semibold">
             {progress?.bestPercentage !== undefined ? (
               <>
@@ -83,32 +83,32 @@ export function SubjectCard({ subject, index, progress }: SubjectCardProps) {
 
       <div className="mt-5">
         <div className="mb-2 flex justify-between text-sm">
-          <span className="text-slate-500 dark:text-slate-400">Progress</span>
+          <span className="text-slate-500 dark:text-slate-400">Bajarildi</span>
           <span className="font-medium tabular-nums">
             {answered}/{total}
           </span>
         </div>
-        <ProgressBar value={answered} max={total} label={`${subject.name} progress`} tone={!active && last ? "success" : "primary"} />
+        <ProgressBar value={answered} max={total} label={`${subject.name}: bajarilish`} tone={!active && last ? "success" : "primary"} />
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {active ? (
           <>
             <LinkButton href={testPath} className="flex-1">
-              <Play className="h-4 w-4" aria-hidden /> Continue Test
+              <Play className="h-4 w-4" aria-hidden /> Testni davom ettirish
             </LinkButton>
-            <Button variant="secondary" onClick={startFresh} aria-label={`Restart ${subject.name}`}>
-              <RotateCcw className="h-4 w-4" aria-hidden /> Restart
+            <Button variant="secondary" onClick={startFresh} aria-label={`${subject.name}: qayta boshlash`}>
+              <RotateCcw className="h-4 w-4" aria-hidden /> Qayta boshlash
             </Button>
           </>
         ) : (
           <>
             <Button onClick={startFresh} className="flex-1">
-              <Play className="h-4 w-4" aria-hidden /> {last ? "Retake Test" : "Start Test"}
+              <Play className="h-4 w-4" aria-hidden /> {last ? "Qayta topshirish" : "Testni boshlash"}
             </Button>
             {last && (
               <LinkButton variant="secondary" href={`/results/${subject.id}`}>
-                View Results
+                Natijalarni ko‘rish
               </LinkButton>
             )}
           </>

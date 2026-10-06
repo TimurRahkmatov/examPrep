@@ -42,22 +42,22 @@ export function AnswerReview({ number, question, selected, status }: AnswerRevie
       className={cn("scroll-mt-24 rounded-2xl border border-l-4 border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6", borders[status])}
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Question {number}</p>
-        {status === "correct" && <span className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">Correct</span>}
-        {status === "incorrect" && <span className="text-xs font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-400">Incorrect</span>}
-        {status === "unanswered" && <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Unanswered</span>}
+        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{number}-savol</p>
+        {status === "correct" && <span className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">To‘g‘ri</span>}
+        {status === "incorrect" && <span className="text-xs font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-400">Noto‘g‘ri</span>}
+        {status === "unanswered" && <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Javobsiz</span>}
       </div>
       <h3 className="mt-2 break-words font-semibold leading-relaxed">{question.question}</h3>
       <div className="mt-4 space-y-2">
         {status === "unanswered" ? (
           <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
             <CircleDashed className="h-5 w-5 shrink-0" aria-hidden />
-            <span className="font-semibold">Not answered</span>
+            <span className="font-semibold">Javob berilmagan</span>
           </div>
         ) : (
-          <AnswerLine tone={status === "correct" ? "correct" : "wrong"} label="Your answer" text={selected ?? ""} />
+          <AnswerLine tone={status === "correct" ? "correct" : "wrong"} label="Sizning javobingiz" text={selected ?? ""} />
         )}
-        {status !== "correct" && <AnswerLine tone="correct" label="Correct answer" text={question.correctAnswer} />}
+        {status !== "correct" && <AnswerLine tone="correct" label="To‘g‘ri javob" text={question.correctAnswer} />}
       </div>
     </article>
   );

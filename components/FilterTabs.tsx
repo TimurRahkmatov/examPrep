@@ -8,15 +8,15 @@ interface FilterTabsProps {
 }
 
 const tabs: { id: ReviewFilter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "correct", label: "Correct" },
-  { id: "incorrect", label: "Incorrect" },
-  { id: "unanswered", label: "Unanswered" },
+  { id: "all", label: "Barchasi" },
+  { id: "correct", label: "To‘g‘ri" },
+  { id: "incorrect", label: "Noto‘g‘ri" },
+  { id: "unanswered", label: "Javobsiz" },
 ];
 
 export function FilterTabs({ value, counts, onChange }: FilterTabsProps) {
   return (
-    <div role="tablist" aria-label="Filter questions" className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-800/70">
+    <div role="tablist" aria-label="Savollarni saralash" className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-800/70">
       {tabs.map((tab) => {
         const selected = tab.id === value;
         return (

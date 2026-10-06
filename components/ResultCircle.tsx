@@ -9,7 +9,7 @@ export function ResultCircle({ percentage }: { percentage: number }) {
   const color = percentage >= 70 ? "text-emerald-500" : percentage >= 40 ? "text-amber-500" : "text-rose-500";
 
   return (
-    <div className="relative h-40 w-40 shrink-0" role="img" aria-label={`${percentage}% correct`}>
+    <div className="relative h-40 w-40 shrink-0" role="img" aria-label={`${percentage}% to‘g‘ri`}>
       <svg viewBox="0 0 128 128" className="h-full w-full -rotate-90">
         <circle cx="64" cy="64" r={radius} fill="none" strokeWidth="12" className="stroke-slate-200 dark:stroke-slate-800" />
         <circle
@@ -27,7 +27,7 @@ export function ResultCircle({ percentage }: { percentage: number }) {
       </svg>
       <div className="absolute inset-0 grid place-content-center text-center" aria-hidden>
         <span className="text-3xl font-bold tabular-nums">{shown}%</span>
-        <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Correct</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">To‘g‘ri</span>
       </div>
     </div>
   );

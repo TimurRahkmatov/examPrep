@@ -9,25 +9,25 @@ export const subjects: Subject[] = [
   {
     id: "subject1",
     name: "Profayling",
-    description: "Profiling, verbal and nonverbal communication, ethics",
+    description: "Profayling, verbal va noverbal muloqot, etika",
     questions: subject1,
   },
   {
     id: "subject2",
     name: "Oila psixologiyasi",
-    description: "Family psychology (5th year, PP extramural)",
+    description: "Oila psixologiyasi (5-kurs, PP sirtqi)",
     questions: subject2,
   },
   {
     id: "subject3",
     name: "Deviant xulq",
-    description: "Deviant behaviour psychology",
+    description: "Deviant xulq psixologiyasi",
     questions: subject3,
   },
   {
     id: "subject4",
     name: "Xulq testlari",
-    description: "Behaviour psychology test bank",
+    description: "Xulq psixologiyasi bo‘yicha testlar bazasi",
     questions: subject4,
   },
 ];

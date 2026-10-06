@@ -15,7 +15,7 @@ export function QuestionCard({ number, question, options, selected, onSelect }: 
   const headingId = `question-${question.id}`;
   return (
     <section className="animate-fade-in rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-      <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Question {number}</p>
+      <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{number}-savol</p>
       <h2 id={headingId} className="mt-2 break-words text-lg font-semibold leading-relaxed sm:text-xl">
         {question.question}
       </h2>

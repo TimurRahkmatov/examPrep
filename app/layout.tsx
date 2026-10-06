@@ -8,7 +8,7 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin", "cyrillic"] }
 
 export const metadata: Metadata = {
   title: siteConfig.name,
-  description: "Practice tests with instant scoring and full answer review.",
+  description: "Bir zumda baholanadigan va javoblarni to‘liq tahlil qiladigan mashq testlari.",
 };
 
 export const viewport: Viewport = {
@@ -23,7 +23,7 @@ const themeScript = `try{var t=localStorage.getItem("examprep:theme");if(t==="da
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="uz" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

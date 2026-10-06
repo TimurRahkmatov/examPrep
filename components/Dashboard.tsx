@@ -15,19 +15,19 @@ export function Dashboard() {
   const inProgress = subjects.filter((s) => progress?.[s.id]?.active).length;
 
   const stats = [
-    { label: "Subjects", value: String(subjects.length) },
-    { label: "In progress", value: progress ? String(inProgress) : "–" },
-    { label: "Completed", value: progress ? String(completed.length) : "–" },
-    { label: "Average score", value: average === null ? "—" : `${average}%` },
+    { label: "Fanlar", value: String(subjects.length) },
+    { label: "Jarayonda", value: progress ? String(inProgress) : "–" },
+    { label: "Yakunlangan", value: progress ? String(completed.length) : "–" },
+    { label: "O‘rtacha ball", value: average === null ? "—" : `${average}%` },
   ];
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <section className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">Dashboard</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">Ready for your next test?</h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">Choose a subject and start practicing.</p>
+          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">Bosh sahifa</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">Keyingi testga tayyormisiz?</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">Fanni tanlang va mashq qilishni boshlang.</p>
         </div>
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {stats.map((stat) => (
@@ -42,7 +42,7 @@ export function Dashboard() {
         </dl>
       </section>
 
-      <section aria-label="Subjects" className="mt-8 grid gap-4 sm:gap-6 md:grid-cols-2">
+      <section aria-label="Fanlar" className="mt-8 grid gap-4 sm:gap-6 md:grid-cols-2">
         {progress === null
           ? subjects.map((s) => (
               <div key={s.id} className="h-72 animate-pulse rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />

@@ -62,12 +62,12 @@ export function TestRunner({ subjectId }: { subjectId: string }) {
     return (
       <main className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
         <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-500" aria-hidden />
-        <h1 className="mt-4 text-2xl font-bold">You finished {subject.name}</h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">Review your answers or start a fresh attempt.</p>
+        <h1 className="mt-4 text-2xl font-bold">Siz «{subject.name}» testini yakunladingiz</h1>
+        <p className="mt-2 text-slate-600 dark:text-slate-400">Javoblaringizni ko‘rib chiqing yoki testni qaytadan boshlang.</p>
         <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
-          <LinkButton href={`/results/${subjectId}`}>View Results</LinkButton>
+          <LinkButton href={`/results/${subjectId}`}>Natijalarni ko‘rish</LinkButton>
           <Button variant="secondary" onClick={() => startAttempt(subjectId)}>
-            Retake Test
+            Testni qayta topshirish
           </Button>
         </div>
       </main>
@@ -92,7 +92,7 @@ export function TestRunner({ subjectId }: { subjectId: string }) {
             <div className="flex min-w-0 items-center gap-2">
               <Link
                 href="/"
-                aria-label="Back to subjects"
+                aria-label="Fanlarga qaytish"
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden />
@@ -100,11 +100,11 @@ export function TestRunner({ subjectId }: { subjectId: string }) {
               <h1 className="truncate font-semibold">{subject.name}</h1>
             </div>
             <p className="shrink-0 text-sm font-medium tabular-nums text-slate-600 dark:text-slate-300">
-              Question {index + 1} of {total}
+              Savol {index + 1} / {total}
             </p>
           </div>
           <div className="mt-3 flex items-center gap-3">
-            <ProgressBar value={index + 1} max={total} label="Position in test" />
+            <ProgressBar value={index + 1} max={total} label="Testdagi o‘rin" />
             <span className="w-10 shrink-0 text-right text-xs font-semibold tabular-nums text-slate-500 dark:text-slate-400">
               {Math.round(((index + 1) / total) * 100)}%
             </span>
@@ -129,15 +129,15 @@ export function TestRunner({ subjectId }: { subjectId: string }) {
 
           <div className="mt-6 flex items-center justify-between gap-3">
             <Button variant="secondary" onClick={() => goTo(index - 1)} disabled={index === 0}>
-              <ArrowLeft className="h-4 w-4" aria-hidden /> Previous
+              <ArrowLeft className="h-4 w-4" aria-hidden /> Oldingi
             </Button>
             {isLast ? (
               <Button onClick={requestFinish}>
-                <Flag className="h-4 w-4" aria-hidden /> Finish Test
+                <Flag className="h-4 w-4" aria-hidden /> Testni yakunlash
               </Button>
             ) : (
               <Button onClick={() => goTo(index + 1)}>
-                Next <ArrowRight className="h-4 w-4" aria-hidden />
+                Keyingi <ArrowRight className="h-4 w-4" aria-hidden />
               </Button>
             )}
           </div>
@@ -146,34 +146,34 @@ export function TestRunner({ subjectId }: { subjectId: string }) {
         <aside className="hidden lg:block">
           <div className="sticky top-44 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-baseline justify-between">
-              <h2 className="font-semibold">Questions</h2>
+              <h2 className="font-semibold">Savollar</h2>
               <span className="text-sm tabular-nums text-slate-500 dark:text-slate-400">
-                {answeredCount}/{total} answered
+                {answeredCount}/{total} ta javob berildi
               </span>
             </div>
             <div className="mt-4 max-h-[50vh] overflow-y-auto pr-1">
               <QuestionNavigator statuses={statuses} currentIndex={index} onSelect={goTo} legend={[...legend]} />
             </div>
             <Button variant="secondary" onClick={requestFinish} className="mt-5 w-full">
-              <Flag className="h-4 w-4" aria-hidden /> Finish Test
+              <Flag className="h-4 w-4" aria-hidden /> Testni yakunlash
             </Button>
           </div>
         </aside>
 
         <p className="text-center text-sm text-slate-500 dark:text-slate-400 lg:hidden">
-          {answeredCount}/{total} answered ·{" "}
+          {answeredCount}/{total} ta javob berildi ·{" "}
           <button type="button" onClick={requestFinish} className="font-medium text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-400">
-            Finish test early
+            Testni muddatidan oldin yakunlash
           </button>
         </p>
       </main>
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Finish the test?"
-        message={`You have ${unanswered} unanswered question${unanswered === 1 ? "" : "s"}. Are you sure you want to finish?`}
-        cancelLabel="Continue Test"
-        confirmLabel="Finish Anyway"
+        title="Testni yakunlaysizmi?"
+        message={`Sizda ${unanswered} ta javob berilmagan savol bor. Haqiqatan ham testni yakunlamoqchimisiz?`}
+        cancelLabel="Testni davom ettirish"
+        confirmLabel="Baribir yakunlash"
         onCancel={closeConfirm}
         onConfirm={submit}
       />

@@ -13,10 +13,10 @@ const statusClasses: Record<QuestionStatus, string> = {
 };
 
 const statusLabels: Record<QuestionStatus, string> = {
-  unanswered: "Unanswered",
-  answered: "Answered",
-  correct: "Correct",
-  incorrect: "Incorrect",
+  unanswered: "Javobsiz",
+  answered: "Javob berilgan",
+  correct: "To‘g‘ri",
+  incorrect: "Noto‘g‘ri",
 };
 
 interface QuestionNavigatorProps {
@@ -36,7 +36,7 @@ export function QuestionNavigator({ statuses, currentIndex, onSelect, layout = "
   }, [currentIndex, layout]);
 
   return (
-    <nav aria-label="Question navigator">
+    <nav aria-label="Savollar navigatori">
       <ol
         className={cn(
           layout === "grid"
@@ -53,7 +53,7 @@ export function QuestionNavigator({ statuses, currentIndex, onSelect, layout = "
                 ref={current ? currentRef : undefined}
                 onClick={() => onSelect(index)}
                 aria-current={current ? "step" : undefined}
-                aria-label={`Question ${index + 1}, ${statusLabels[status].toLowerCase()}`}
+                aria-label={`${index + 1}-savol, ${statusLabels[status].toLowerCase()}`}
                 className={cn(
                   "grid h-9 w-full min-w-9 place-items-center rounded-lg text-xs font-semibold tabular-nums transition duration-150",
                   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",

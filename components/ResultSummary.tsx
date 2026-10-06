@@ -4,10 +4,10 @@ import { ResultCard } from "./ResultCard";
 import { ResultCircle } from "./ResultCircle";
 
 function headline(percentage: number) {
-  if (percentage >= 90) return "Outstanding work!";
-  if (percentage >= 70) return "Great job, well done.";
-  if (percentage >= 40) return "Good effort. Review your mistakes below.";
-  return "Keep practicing. Review your mistakes below.";
+  if (percentage >= 90) return "Ajoyib natija!";
+  if (percentage >= 70) return "Juda yaxshi, barakalla!";
+  if (percentage >= 40) return "Yaxshi harakat. Quyida xatolaringizni ko‘rib chiqing.";
+  return "Mashq qilishda davom eting. Quyida xatolaringizni ko‘rib chiqing.";
 }
 
 export function ResultSummary({ subjectName, result }: { subjectName: string; result: TestResult }) {
@@ -17,7 +17,7 @@ export function ResultSummary({ subjectName, result }: { subjectName: string; re
         <ResultCircle percentage={result.percentage} />
         <div>
           <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">{subjectName}</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight">Test Completed 🎉</h1>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight">Test yakunlandi 🎉</h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">{headline(result.percentage)}</p>
           <p className="mt-4 text-4xl font-bold tabular-nums">
             {result.correct}
@@ -26,10 +26,10 @@ export function ResultSummary({ subjectName, result }: { subjectName: string; re
         </div>
       </div>
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <ResultCard label="Score" value={result.percentage} suffix="%" icon={Target} tone="primary" />
-        <ResultCard label="Correct answers" value={result.correct} icon={CheckCircle2} tone="success" />
-        <ResultCard label="Incorrect answers" value={result.incorrect} icon={XCircle} tone="error" />
-        <ResultCard label="Unanswered" value={result.unanswered} icon={CircleDashed} tone="neutral" />
+        <ResultCard label="Natija" value={result.percentage} suffix="%" icon={Target} tone="primary" />
+        <ResultCard label="To‘g‘ri javoblar" value={result.correct} icon={CheckCircle2} tone="success" />
+        <ResultCard label="Noto‘g‘ri javoblar" value={result.incorrect} icon={XCircle} tone="error" />
+        <ResultCard label="Javobsiz" value={result.unanswered} icon={CircleDashed} tone="neutral" />
       </div>
     </section>
   );

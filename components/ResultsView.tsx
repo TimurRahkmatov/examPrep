@@ -56,12 +56,12 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
     return (
       <main className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
         <ClipboardList className="mx-auto h-12 w-12 text-slate-400" aria-hidden />
-        <h1 className="mt-4 text-2xl font-bold">No results yet</h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">Finish a {subject.name} test to see your score and review.</p>
+        <h1 className="mt-4 text-2xl font-bold">Hozircha natijalar yo‘q</h1>
+        <p className="mt-2 text-slate-600 dark:text-slate-400">Natija va tahlilni ko‘rish uchun «{subject.name}» testini yakunlang.</p>
         <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
-          <LinkButton href={`/subject/${subjectId}`}>Go to Test</LinkButton>
+          <LinkButton href={`/subject/${subjectId}`}>Testga o‘tish</LinkButton>
           <LinkButton href="/" variant="secondary">
-            Back to Subjects
+            Fanlarga qaytish
           </LinkButton>
         </div>
       </main>
@@ -78,30 +78,30 @@ export function ResultsView({ subjectId }: { subjectId: string }) {
 
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
         <Button onClick={retake}>
-          <RotateCcw className="h-4 w-4" aria-hidden /> Retake Test
+          <RotateCcw className="h-4 w-4" aria-hidden /> Testni qayta topshirish
         </Button>
         <LinkButton href="/" variant="secondary">
-          <LayoutGrid className="h-4 w-4" aria-hidden /> Back to Subjects
+          <LayoutGrid className="h-4 w-4" aria-hidden /> Fanlarga qaytish
         </LinkButton>
       </div>
 
       <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <h2 className="font-semibold">Question map</h2>
-        <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Tap a number to jump to that question.</p>
+        <h2 className="font-semibold">Savollar xaritasi</h2>
+        <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Savolga o‘tish uchun raqamni bosing.</p>
         <QuestionNavigator statuses={statuses} onSelect={jumpTo} legend={["correct", "incorrect", "unanswered"]} />
       </section>
 
       <section className="mt-10" aria-labelledby="review-heading">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 id="review-heading" className="text-xl font-bold">
-            Answer review
+            Javoblar tahlili
           </h2>
           <FilterTabs value={filter} counts={counts} onChange={setFilter} />
         </div>
         <div className="mt-5 space-y-4">
           {visible.length === 0 ? (
             <p className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500 dark:border-slate-700 dark:text-slate-400">
-              No questions in this category.
+              Bu toifada savollar yo‘q.
             </p>
           ) : (
             visible.map(({ question, index, status }) => (
