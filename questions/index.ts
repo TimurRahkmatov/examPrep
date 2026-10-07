@@ -1,7 +1,7 @@
 import type { Subject } from "@/lib/types";
 import { questions as subject1 } from "./subject1";
 import { questions as subject2 } from "./subject2";
-import { questions as subject3 } from "./subject3";
+import { questions as subject5 } from "./subject5";
 import { questions as subject4 } from "./subject4";
 
 // Edit names and descriptions here. The question count comes from each file.
@@ -19,10 +19,10 @@ export const subjects: Subject[] = [
     questions: subject2,
   },
   {
-    id: "subject3",
-    name: "Deviant xulq",
-    description: "Deviant xulq psixologiyasi",
-    questions: subject3,
+    id: "subject5",
+    name: "Proyektiv psixologiya",
+    description: "Proyektiv psixologiya (150 ta test)",
+    questions: subject5,
   },
   {
     id: "subject4",

@@ -30,7 +30,7 @@ Every wrong answer in a finished test is saved (once per question, keyed `subjec
 
 ## Editing questions and subjects
 
-- `questions/subject1.ts` … `subject4.ts` hold one subject each. Every question looks like:
+- `questions/subject1.ts`, `subject2.ts`, `subject4.ts` and `subject5.ts` hold one subject each. Every question looks like:
 
   ```ts
   {
